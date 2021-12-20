@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./component/header";
+import Footer from "./component/footer";
+import Body from "./component/body";
+import { getFeeds } from "./service/getFeeds";
 
 function App() {
+  const [feeds, setFeed] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    getFeeds().then((items) => {
+      if (mounted) {
+        setFeed(items);
+      }
+    });
+    return () => (mounted = false);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <Header />
+      <Body feeds={feeds} />
+      <Footer />
+    </React.Fragment>
   );
 }
 
