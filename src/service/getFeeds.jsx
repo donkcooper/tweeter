@@ -1,13 +1,63 @@
+const _HOSTNAME = "192.168.0.134";
+const _PORT = "8080";
+const _URL = "http://" + _HOSTNAME + ":" + _PORT;
+
 export function getFeeds() {
-  return fetch("http://192.168.0.134:8080/feed").then((data) => data.json());
+  return fetch(_URL + "/feed").then((data) => data.json());
 }
 
 export function addFeed(tweet) {
-  return fetch("http://localhost:8080/feed/addTweet", {
+  return fetch(_URL + "/feed/addTweet", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(tweet),
   }).then((data) => data.json());
+}
+
+export function isSignUp(people) {
+  return fetch(_URL + "/people", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(people),
+  }).then((response) => {
+    if (response.status === 201) {
+      return response;
+    } else {
+      console.log(response.json());
+      throw new Error("Could not SignUp");
+    }
+  });
+}
+
+export function doLogin(username) {
+  return fetch(_URL + "/people/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(username),
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      console.log(response.json());
+      throw new Error("Incorrect Username");
+    }
+  });
+}
+
+export function validateUsername(username) {
+  return fetch(_URL + "/people/" + username).then((response) => {
+    if (response.ok) {
+      return response;
+    } else if (response.status === 403) {
+      throw new Error(
+        username + " already exists. Please choose a different name"
+      );
+    }
+  });
 }

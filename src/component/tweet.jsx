@@ -11,10 +11,13 @@ const Tweet = ({ peopleId }) => {
 
   const handleClose = () => {
     console.log("Reset!");
+    setLocation("");
+    setMessage("");
     setShow(false);
   };
 
   const handleShow = () => setShow(true);
+
   const postTweet = () => {
     const tweet = {
       peopleId: peopleId,
@@ -43,7 +46,7 @@ const Tweet = ({ peopleId }) => {
     }
     addFeed(tweet).then((response) => {
       console.log(response);
-      if (response === 1000) {
+      if (response === 5) {
         alert("1000 Tweet!!");
       } else {
         alert(
@@ -99,7 +102,7 @@ const Tweet = ({ peopleId }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="cancel" onClick={handleClose}>
+          <Button variant="danger" onClick={handleClose}>
             Close
           </Button>
           <Button variant="success" onClick={postTweet}>
