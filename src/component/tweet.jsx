@@ -1,9 +1,13 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import React, { useEffect, useState } from "react";
+import Form from "react-bootstrap/Form";
+import React, { useState } from "react";
+import { addFeed } from "../service/getFeeds";
 
-const Tweet = ({ username }) => {
+const Tweet = ({ peopleId }) => {
   const [show, setShow] = useState(false);
+  const [location, setLocation] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleClose = () => {
     console.log("Reset!");
@@ -12,8 +16,48 @@ const Tweet = ({ username }) => {
 
   const handleShow = () => setShow(true);
   const postTweet = () => {
-    console.log("Tweeted! For", username);
-    setShow(false);
+    const tweet = {
+      peopleId: peopleId,
+      location: location,
+      message: message,
+    };
+    setShow(validateAndPostTweet(tweet));
+  };
+
+  const handleOnChangeMessage = (value) => {
+    setMessage(value);
+  };
+
+  const handleOnChangeLocation = (value) => {
+    setLocation(value);
+  };
+
+  const validateAndPostTweet = (tweet) => {
+    console.log(tweet);
+    if (tweet.peopleId === "") {
+      alert("Login to Tweet");
+      return true;
+    } else if (tweet.location === "" || tweet.message === "") {
+      alert("Location or Message empty");
+      return true;
+    }
+    addFeed(tweet).then((response) => {
+      console.log(response);
+      if (response === 1000) {
+        alert("1000 Tweet!!");
+      } else {
+        alert(
+          "Tweeted #" +
+            response +
+            " with " +
+            tweet.message +
+            " from " +
+            tweet.location
+        );
+      }
+      window.location.reload(false);
+    });
+    return false;
   };
 
   return (
@@ -30,8 +74,29 @@ const Tweet = ({ username }) => {
           <Modal.Title>Post a Tweet</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          I will not close if you click outside me. Don't even try to press
-          escape key.
+          <Form>
+            <Form.Group className="mb-3" controlId="location">
+              <Form.Label>Select a Location</Form.Label>
+              <Form.Select
+                className="me-sm-2"
+                onChange={(e) => handleOnChangeLocation(e.target.value)}
+              >
+                <option value="0">Choose...</option>
+                <option value="Syndey">Syndey</option>
+                <option value="Helsinki">Helsinki</option>
+                <option value="Istanbul">Istanbul</option>
+                <option value="London">London</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="message">
+              <Form.Label>Tweet Anything</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                onChange={(e) => handleOnChangeMessage(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="cancel" onClick={handleClose}>
