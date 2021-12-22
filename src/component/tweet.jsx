@@ -46,8 +46,8 @@ const Tweet = ({ peopleId }) => {
     }
     addFeed(tweet).then((response) => {
       console.log(response);
-      if (response === 5) {
-        alert("1000 Tweet!!");
+      if (response === 10) {
+        alert("10 Tweet!!");
       } else {
         alert(
           "Tweeted #" +
