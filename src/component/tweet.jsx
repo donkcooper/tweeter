@@ -46,18 +46,14 @@ const Tweet = ({ peopleId }) => {
     }
     addFeed(tweet).then((response) => {
       console.log(response);
-      if (response === 10) {
-        alert("10 Tweet!!");
-      } else {
-        alert(
-          "Tweeted #" +
-            response +
-            " with " +
-            tweet.message +
-            " from " +
-            tweet.location
-        );
-      }
+      alert(
+        "Tweeted #" +
+          response +
+          " with " +
+          tweet.message +
+          " from " +
+          tweet.location
+      );
       window.location.reload(false);
     });
     return false;

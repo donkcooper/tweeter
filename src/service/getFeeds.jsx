@@ -1,4 +1,4 @@
-const _HOSTNAME = "192.168.0.134";
+const _HOSTNAME = "localhost";
 const _PORT = "8080";
 const _URL = "http://" + _HOSTNAME + ":" + _PORT;
 
@@ -58,6 +58,18 @@ export function validateUsername(username) {
       throw new Error(
         username + " already exists. Please choose a different name"
       );
+    }
+  });
+}
+
+export function doLike(feedId) {
+  return fetch(_URL + "/feed/" + feedId + "/stats/like", {
+    method: "PUT",
+  }).then((response) => {
+    if (response.ok) {
+      return response;
+    } else if (response.status === 403) {
+      throw new Error(feedId + " could not be liked");
     }
   });
 }
